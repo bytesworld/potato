@@ -1,58 +1,59 @@
 package configs
 
 import (
-	"log"
-	"time"
-
-	"github.com/go-ini/ini"
+	"fmt"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 )
 
-var (
-	Cfg *ini.File
-
-	RunMode string
-
-	HTTPPort     int
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
-
-	PageSize  int
-	JwtSecret string
-)
-
-func init() {
-	var err error
-	Cfg, err = ini.Load("app.ini")
-	if err != nil {
-		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
-	}
-
-	LoadBase()
-	LoadServer()
-	LoadApp()
+type Configuration struct {
+	App  App    `mapstructure:"APP" json:"APP" yaml:"APP"`
+	Db   Db     `mapstructure:"DATABASE" json:"DATABASE" yaml:"DATABASE"`
+	Mode string `mapstructure:"RUN_MODE" json:"RUN_MODE" yaml:"RUN_MODE"`
 }
 
-func LoadBase() {
-	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
+var ConfigName = "potato"
+
+// 设置默认配置读取路径
+var ConfigPath = []string{
+	"/Users/weidong/Desktop/repo/potato/configs/",
+	"/etc/potato/",
+	"~/.config/potato/",
 }
 
-func LoadServer() {
-	sec, err := Cfg.GetSection("server")
-	if err != nil {
-		log.Fatalf("Fail to get section 'server': %v", err)
-	}
-
-	HTTPPort = sec.Key("HTTP_PORT").MustInt(8000)
-	ReadTimeout = time.Duration(sec.Key("READ_TIMEOUT").MustInt(60)) * time.Second
-	WriteTimeout = time.Duration(sec.Key("WRITE_TIMEOUT").MustInt(60)) * time.Second
+type Application struct {
+	Config      Configuration
+	ConfigViper *viper.Viper
 }
 
-func LoadApp() {
-	sec, err := Cfg.GetSection("app")
-	if err != nil {
-		log.Fatalf("Fail to get section 'app': %v", err)
+var AppObj = new(Application)
+
+func LoadConfig() *viper.Viper {
+	v := viper.New()
+	for _, path := range ConfigPath {
+		v.AddConfigPath(path)
+	}
+	v.SetConfigName(ConfigName)
+	v.SetConfigType("yaml")
+
+	//fmt.Println()
+	if err := v.ReadInConfig(); err != nil {
+		panic(fmt.Errorf("read config failed: %s \n", err))
+	}
+	v.AutomaticEnv()
+	// 监听配置文件
+	v.WatchConfig()
+	v.OnConfigChange(func(in fsnotify.Event) {
+		fmt.Println("config file changed:", in.Name)
+		// 重载配置
+		if err := v.Unmarshal(&AppObj.Config); err != nil {
+			fmt.Println(err)
+		}
+	})
+	// 将配置赋值给全局变量
+	if err := v.Unmarshal(&AppObj.Config); err != nil {
+		fmt.Println(err)
 	}
 
-	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
-	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
+	return v
 }

@@ -1,0 +1,11 @@
+RUN_MODE: DEBUG
+
+APP:
+  ENV: local
+  PORT: 8888
+  APP_NAME: potato
+  APP_URL: 'http://localhost'
+
+DATABASE:
+  ENGINE: 'sqlite3'
+  NAME': './umop.sqlite3'

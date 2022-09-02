@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"gitee.com/bytesworld/tomato/configs"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -12,5 +15,8 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.Run()
+	cmd,_:= os.Getwd()
+	fmt.Println(cmd)
+	fmt.Println(configs.LoadConfig())
+	r.Run(":"+configs.AppObj.Config.App.Port)
 }
