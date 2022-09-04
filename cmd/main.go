@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gitee.com/bytesworld/tomato/configs"
 	"gitee.com/bytesworld/tomato/internal"
 	"gitee.com/bytesworld/tomato/internal/middleware"
@@ -10,7 +9,7 @@ import (
 )
 
 func main() {
-	fmt.Println(configs.LoadConfig())
+	//fmt.Println(configs.LoadConfig())
 	r := gin.Default()
 	r.Use(middleware.LoggerHander())
 	r.GET("/ping", func(c *gin.Context) {
