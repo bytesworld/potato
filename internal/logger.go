@@ -30,7 +30,10 @@ func initLog() *logrus.Logger {
 	}
 	log.SetOutput(f)
 	//log.SetFormatter(&logrus.JSONFormatter{})
-	log.SetFormatter(&logrus.TextFormatter{})
+	log.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat:configs.AppObj.Config.Log.Format,
+		FullTimestamp:true,
+	})
 
 	switch configs.AppObj.Config.Log.LogLevel {
 	case "DEBUG":
