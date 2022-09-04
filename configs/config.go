@@ -3,37 +3,42 @@ package configs
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"gorm.io/gorm"
 )
 
 type Configuration struct {
 	App  App    `mapstructure:"APP" json:"APP" yaml:"APP"`
 	Db   Db     `mapstructure:"DATABASE" json:"DATABASE" yaml:"DATABASE"`
-	Log   Log     `mapstructure:"LOG" json:"LOG" yaml:"LOG"`
+	Log  Log    `mapstructure:"LOG" json:"LOG" yaml:"LOG"`
 	Mode string `mapstructure:"RUN_MODE" json:"RUN_MODE" yaml:"RUN_MODE"`
 }
 
 const (
 	configName = "potato"
 	configType = "yaml"
-
 )
 
 // 设置默认配置读取路径
 var ConfigPath = []string{
-	"/Users/weidong/Desktop/repo/potato/configs/",
-	"/etc/potato/",
 	"~/.config/potato/",
+	"~/.config/",
+	"~/config/",
+	"/etc/potato/",
+	"./configs/",
 }
 
 type Application struct {
 	Config      Configuration
 	ConfigViper *viper.Viper
+	Log         *logrus.Logger
+	DB          *gorm.DB
 }
 
 var AppObj = new(Application)
 
-func init()  {
+func init() {
 	LoadConfig()
 }
 

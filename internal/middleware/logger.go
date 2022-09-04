@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"gitee.com/bytesworld/tomato/internal"
+	"gitee.com/bytesworld/tomato/internal/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -18,7 +18,7 @@ func LoggerHander() gin.HandlerFunc {
 		reqUrl := c.Request.RequestURI
 		status := c.Writer.Status()
 		clientIp := c.ClientIP()
-		internal.Logger.WithFields(logrus.Fields{
+		logger.Logger.WithFields(logrus.Fields{
 			"start_time": startTime,
 			"duration":   durationTime,
 			"method":     reqMethod,

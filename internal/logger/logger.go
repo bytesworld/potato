@@ -1,8 +1,9 @@
-package internal
+package logger
 
 import (
 	"gitee.com/bytesworld/tomato/configs"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"path"
 )
@@ -15,10 +16,9 @@ func init() {
 
 func initLog() *logrus.Logger {
 	log := logrus.New()
+	// 是否打印行好及function
+	log.SetReportCaller(configs.AppObj.Config.Log.ShowLine)
 	logFileName := configs.AppObj.Config.Log.FileName
-	log.Formatter = &logrus.JSONFormatter{
-		TimestampFormat: configs.AppObj.Config.Log.Format,
-	}
 	logPath := configs.AppObj.Config.Log.Path
 	logName := path.Join(logPath, logFileName)
 	var f *os.File
@@ -28,12 +28,14 @@ func initLog() *logrus.Logger {
 	} else {
 		f, err = os.OpenFile(logName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	}
-	log.SetOutput(f)
+	log.SetOutput(io.MultiWriter(os.Stdout, f))
+	//内置的formatter
 	//log.SetFormatter(&logrus.JSONFormatter{})
-	log.SetFormatter(&logrus.TextFormatter{
-		TimestampFormat:configs.AppObj.Config.Log.Format,
-		FullTimestamp:true,
-	})
+	//log.SetFormatter(&logrus.TextFormatter{
+	//	TimestampFormat: configs.AppObj.Config.Log.Format,
+	//	FullTimestamp:   true,
+	//})
+	log.SetFormatter(&PotatoFormatter{})
 
 	switch configs.AppObj.Config.Log.LogLevel {
 	case "DEBUG":

@@ -1,12 +1,16 @@
-.PHONY: build clean   help
+.PHONY: build clean help run
 
 all: build
 
-build:
-	@go build -v .
+build:clean
+	@cd cmd; go build -o ../potato -v .
 
 clean:
 	@echo "clean"
+	@rm -f potato potato.sqlite3
+
+run:
+	@./potato
 
 help:
 	@echo "make: compile packages and dependencies"
