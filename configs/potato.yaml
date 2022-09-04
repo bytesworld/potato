@@ -8,4 +8,15 @@ APP:
 
 DATABASE:
   ENGINE: 'sqlite3'
-  NAME': './umop.sqlite3'
+  NAME': './potato.sqlite3'
+
+LOG:
+  LEVEL: 'DEBUG'
+  FORMAT': '2006-01-02 15:04:05'
+  PATH: "/var/log/potato/"
+  FILE_NAME: "potato.log"
+  MAX_BACKUPS: 5
+  MAX_SIZE: 50  # 单位mb
+  MAX_AGE: 30 # DAY
+
+

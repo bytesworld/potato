@@ -9,10 +9,15 @@ import (
 type Configuration struct {
 	App  App    `mapstructure:"APP" json:"APP" yaml:"APP"`
 	Db   Db     `mapstructure:"DATABASE" json:"DATABASE" yaml:"DATABASE"`
+	Log   Log     `mapstructure:"LOG" json:"LOG" yaml:"LOG"`
 	Mode string `mapstructure:"RUN_MODE" json:"RUN_MODE" yaml:"RUN_MODE"`
 }
 
-var ConfigName = "potato"
+const (
+	configName = "potato"
+	configType = "yaml"
+
+)
 
 // 设置默认配置读取路径
 var ConfigPath = []string{
@@ -28,13 +33,17 @@ type Application struct {
 
 var AppObj = new(Application)
 
+func init()  {
+	LoadConfig()
+}
+
 func LoadConfig() *viper.Viper {
 	v := viper.New()
 	for _, path := range ConfigPath {
 		v.AddConfigPath(path)
 	}
-	v.SetConfigName(ConfigName)
-	v.SetConfigType("yaml")
+	v.SetConfigName(configName)
+	v.SetConfigType(configType)
 
 	//fmt.Println()
 	if err := v.ReadInConfig(); err != nil {
