@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	logger.Logger = logger.initLog()
+	//logger.Logger = logger.initLog()
 }
 
 func InitDb() *gorm.DB {
