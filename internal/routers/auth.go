@@ -7,4 +7,5 @@ import (
 
 func loadAuthRouter(router *gin.RouterGroup) {
 	router.GET("auth/", auth.Auth)
+	router.GET("add/", auth.AddUser)
 }

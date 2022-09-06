@@ -16,7 +16,7 @@ import (
 
 func main() {
 	// 初始化数据库
-	configs.AppObj.DB = internal.InitDb()
+	configs.AppObj.DB = internal.DB
 	// 程序关闭前，释放数据库连接
 	defer func() {
 		if configs.AppObj.DB != nil {

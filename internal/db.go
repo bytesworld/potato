@@ -8,8 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func init() {
-	//logger.Logger = logger.initLog()
+	DB = InitDb()
 }
 
 func InitDb() *gorm.DB {
