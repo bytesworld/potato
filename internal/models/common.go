@@ -16,7 +16,6 @@ type Product struct {
 	Price uint
 }
 
-
 // 创建、更新时间
 type Timestamps struct {
 	CreatedAt time.Time `json:"created_at"`

@@ -37,7 +37,6 @@ func initLog() *logrus.Logger {
 	//})
 	log.SetFormatter(&PotatoFormatter{
 		TimestampFormat: configs.AppObj.Config.Log.Format,
-
 	})
 
 	switch configs.AppObj.Config.Log.LogLevel {

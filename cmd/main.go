@@ -3,10 +3,8 @@ package main
 import (
 	"gitee.com/bytesworld/tomato/configs"
 	"gitee.com/bytesworld/tomato/internal"
-	"gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/middleware"
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"gitee.com/bytesworld/tomato/internal/routers"
 )
 
 func main() {
@@ -20,13 +18,25 @@ func main() {
 		}
 	}()
 
-	r := gin.Default()
+	r := routers.SetetupRouter()
+	//v1 := r.Group("/v1")
+	//fmt.Println(v1)
 	r.Use(middleware.LoggerHander())
-	r.GET("/ping", func(c *gin.Context) {
-		logger.Logger.Info("weidong")
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	//r.GET("/ping", func(c *gin.Context) {
+	//	logger.Logger.Info("weidong")
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"message": "pong",
+	//	})
+	//})r.GET("/ping", func(c *gin.Context) {
+	//	logger.Logger.Info("weidong")
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"message": "pong",
+	//	})
+	//})r.GET("/ping", func(c *gin.Context) {
+	//	logger.Logger.Info("weidong")
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"message": "pong",
+	//	})
+	//})
 	r.Run(":" + configs.AppObj.Config.App.Port)
 }

@@ -14,7 +14,7 @@ func init() {
 
 func InitDb() *gorm.DB {
 	dbConfig := configs.AppObj.Config.Db
-	logger.Logger.Infof("db config is %+v",dbConfig)
+	logger.Logger.Infof("db config is %+v", dbConfig)
 	db, err := gorm.Open(sqlite.Open(dbConfig.Name), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
