@@ -4,12 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//type Router gin.Engine
-//
-//func (*Router) AddSubRoutes() {
-//
-//}
-
 func SetetupRouter() *gin.Engine {
 	router := gin.Default()
 	apiV1Group := router.Group("api/v1")

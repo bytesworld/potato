@@ -1,10 +1,17 @@
 package main
 
 import (
+	"context"
 	"gitee.com/bytesworld/tomato/configs"
 	"gitee.com/bytesworld/tomato/internal"
+	"gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/middleware"
 	"gitee.com/bytesworld/tomato/internal/routers"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -19,24 +26,32 @@ func main() {
 	}()
 
 	r := routers.SetetupRouter()
-	//v1 := r.Group("/v1")
-	//fmt.Println(v1)
 	r.Use(middleware.LoggerHander())
-	//r.GET("/ping", func(c *gin.Context) {
-	//	logger.Logger.Info("weidong")
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"message": "pong",
-	//	})
-	//})r.GET("/ping", func(c *gin.Context) {
-	//	logger.Logger.Info("weidong")
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"message": "pong",
-	//	})
-	//})r.GET("/ping", func(c *gin.Context) {
-	//	logger.Logger.Info("weidong")
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"message": "pong",
-	//	})
-	//})
-	r.Run(":" + configs.AppObj.Config.App.Port)
+	// 原有启动服务
+	//r.Run(":" + configs.AppObj.Config.App.Port)
+
+	// 修改为收到信号后5s再停止
+	srv := &http.Server{
+		Addr:    ":" + configs.AppObj.Config.App.Port,
+		Handler: r,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Logger.Warn("listen: %s\n", err)
+		}
+	}()
+
+	// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	logger.Logger.Info("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Logger.Fatal("Server Shutdown:", err)
+	}
+	logger.Logger.Println("Server exiting")
 }

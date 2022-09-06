@@ -1,18 +1,10 @@
 package routers
 
 import (
-	"gitee.com/bytesworld/tomato/internal/logger"
+	"gitee.com/bytesworld/tomato/internal/apps/auth"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
-func auth(c *gin.Context) {
-	logger.Logger.Info("login")
-	c.JSON(http.StatusOK, gin.H{
-		"message": "auth",
-	})
-}
-
 func loadAuthRouter(router *gin.RouterGroup) {
-	router.GET("auth/", auth)
+	router.GET("auth/", auth.Auth)
 }
