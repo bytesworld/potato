@@ -4,6 +4,7 @@ import (
 	. "gitee.com/bytesworld/tomato/internal"
 	. "gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/models"
+	sv_auth "gitee.com/bytesworld/tomato/internal/service/auth"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -45,9 +46,8 @@ func CreateUser(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	var user models.User
-
-	if err := DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+	user, err := sv_auth.GetUserByID(c.Param("id"))
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}

@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"gitee.com/bytesworld/tomato/internal/apps/auth"
+	"gitee.com/bytesworld/tomato/internal/controllers/auth"
 	"github.com/gin-gonic/gin"
 )
 

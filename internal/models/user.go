@@ -8,6 +8,9 @@ type User struct {
 	Timestamps
 	SoftDeletes
 }
+func (User) TableName() string {
+	return "sys_user"
+}
 type CreateUser struct {
 	Name     string `json:"name" gorm:"not null;comment:用户名称"`
 	Mobile   string `json:"mobile" gorm:"not null;index;comment:用户手机号"`
