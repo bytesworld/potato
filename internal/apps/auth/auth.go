@@ -17,15 +17,6 @@ func Auth(c *gin.Context) {
 
 func AddUser(c *gin.Context) {
 	Logger.Info("Add user")
-	//type User struct {
-	//	ID
-	//	Name     string `json:"name" gorm:"not null;comment:用户名称"`
-	//	Mobile   string `json:"mobile" gorm:"not null;index;comment:用户手机号"`
-	//	Password string `json:"password" gorm:"not null;default:'';comment:用户密码"`
-	//	Timestamps
-	//	SoftDeletes
-	//}
-
 	DB.Create(
 		&models.User{
 			Name:     "weidong",
@@ -35,4 +26,61 @@ func AddUser(c *gin.Context) {
 	var user models.User
 	DB.First(&user, 1)
 	c.JSON(http.StatusCreated, user)
+}
+
+func GetUsers(c *gin.Context) {
+	var users []models.User
+	DB.Find(&users)
+	c.JSON(http.StatusCreated, users)
+}
+func CreateUser(c *gin.Context) {
+	var _user models.CreateUser
+	if err := c.ShouldBindJSON(&_user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	user := models.User{Name: _user.Name, Mobile: _user.Mobile, Password: _user.Password}
+	DB.Create(&user)
+	c.JSON(http.StatusCreated, user)
+}
+
+func GetUser(c *gin.Context) {
+	var user models.User
+
+	if err := DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+func UpdateUser(c *gin.Context) {
+	var user models.User
+	if err := DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	// Validate input
+	var _user models.CreateUser
+	if err := c.ShouldBindJSON(&_user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	DB.Model(&user).Updates(_user)
+
+	c.JSON(http.StatusOK, user)
+}
+
+func DeleteUser(c *gin.Context) {
+	var user models.User
+	if err := DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	DB.Delete(&user)
+
+	c.JSON(http.StatusOK, user)
 }
