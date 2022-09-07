@@ -7,7 +7,7 @@ build:clean
 
 clean:
 	@echo "clean"
-	@rm -f potato potato.sqlite3
+	@rm -f potato
 
 run:
 	@./potato
