@@ -57,9 +57,41 @@ package main
 //}
 import (
 	"fmt"
+	"time"
 	"gitee.com/bytesworld/tomato/internal/service/firewall"
 )
 func main()  {
 	pcap:=firewall.NewPcap()
 	fmt.Println(pcap.GetDevs())
+	pcap.GetPackets()
 }
+
+var (
+	xx []time.Time
+)
+//func main() {
+//	timeStart := time.Now()
+//	runSometime(time.Millisecond,long)
+//	fmt.Println(xx)
+//	timeEnd :=time.Now()
+//	fmt.Printf("start time is %s,end time is %s",timeStart,timeEnd)
+//}
+//
+//func runSometime(duration time.Duration,funa func())  {
+//	timeout := make(chan bool ,1)
+//	go func() {
+//		time.Sleep(duration) // 睡眠1秒钟
+//		timeout <- true
+//	}()
+//	go func() {
+//		funa()
+//	}()
+//	<- timeout
+//}
+//func long()  {
+//	for true {
+//		//fmt.Println(time.Now())
+//		time.Sleep(time.Microsecond*100)
+//		xx = append(xx,time.Now())
+//	}
+//}
