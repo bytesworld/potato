@@ -2,6 +2,7 @@ package auth
 
 import (
 	. "gitee.com/bytesworld/tomato/internal"
+	"gitee.com/bytesworld/tomato/internal/controllers"
 	. "gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/models"
 	sv_auth "gitee.com/bytesworld/tomato/internal/service/auth"
@@ -35,9 +36,10 @@ func GetUsers(c *gin.Context) {
 	c.JSON(http.StatusCreated, users)
 }
 func CreateUser(c *gin.Context) {
-	var _user models.CreateUser
+	//var _user models.CreateUser
+	var _user controllers.Register
 	if err := c.ShouldBindJSON(&_user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": controllers.GetErrorMsg(_user, err)})
 		return
 	}
 	user := models.User{Name: _user.Name, Mobile: _user.Mobile, Password: _user.Password}
