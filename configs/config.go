@@ -13,6 +13,7 @@ type Configuration struct {
 	Db   Db     `mapstructure:"DATABASE" json:"DATABASE" yaml:"DATABASE"`
 	Log  Log    `mapstructure:"LOG" json:"LOG" yaml:"LOG"`
 	Mode string `mapstructure:"RUN_MODE" json:"RUN_MODE" yaml:"RUN_MODE"`
+	Jwt Jwt `yaml:"JWT"`
 }
 
 const (

@@ -6,6 +6,10 @@ APP:
   APP_NAME: potato
   APP_URL: 'http://localhost'
 
+JWT:
+  secret: weidong
+  jwt_ttl: 9999
+
 DATABASE:
   ENGINE: 'sqlite3'
   NAME: './potato.sqlite3'
