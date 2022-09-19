@@ -6,6 +6,7 @@ import (
 	. "gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/models"
 	sv_auth "gitee.com/bytesworld/tomato/internal/service/auth"
+	"gitee.com/bytesworld/tomato/pkg/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -17,17 +18,21 @@ func Auth(c *gin.Context) {
 	})
 }
 
-func AddUser(c *gin.Context) {
-	Logger.Info("Add user")
-	DB.Create(
-		&models.User{
-			Name:     "weidong",
-			Mobile:   "19211111",
-			Password: "123",
-		})
-	var user models.User
-	DB.First(&user, 1)
-	c.JSON(http.StatusCreated, user)
+func Register(c *gin.Context) {
+	Logger.Info("register user")
+	var form controllers.Register
+	if err := c.ShouldBindJSON(&form); err != nil {
+		Logger.Error(err)
+		return
+	}
+
+	user, err := sv_auth.Userservice{}.RegisterUser(form)
+	if err != nil {
+		Logger.Error(err)
+		response.BusinessFail(c, err.Error())
+	} else {
+		response.Success(c, user)
+	}
 }
 
 func GetUsers(c *gin.Context) {

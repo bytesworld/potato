@@ -14,6 +14,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/viper v1.11.0
 	github.com/subosito/gotenv v1.3.0 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	gopkg.in/yaml.v3 v3.0.0 // indirect

@@ -12,4 +12,6 @@ func loadAuthRouter(router *gin.RouterGroup) {
 	router.GET("user/:id/", auth.GetUser)
 	router.PUT("user/:id/", auth.UpdateUser)
 	router.DELETE("user/:id/", auth.DeleteUser)
+	router.POST("register/", auth.Register)
+
 }
