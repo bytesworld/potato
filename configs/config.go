@@ -64,6 +64,7 @@ func LoadConfig() *viper.Viper {
 		if err := v.Unmarshal(&AppObj.Config); err != nil {
 			fmt.Println(err)
 		}
+		fmt.Printf("%#v\n",AppObj)
 	})
 	// 将配置赋值给全局变量
 	if err := v.Unmarshal(&AppObj.Config); err != nil {

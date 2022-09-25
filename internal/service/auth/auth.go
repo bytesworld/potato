@@ -17,10 +17,12 @@ func GetUserByID(id string) (user models.User, err error) {
 	return user, nil
 }
 
-type Userservice struct {
+type userservice struct {
 }
 
-func (userservice Userservice) RegisterUser(params controllers.Register) (user models.User, err error) {
+var UserService =new(userservice)
+
+func (userservice userservice) RegisterUser(params controllers.Register) (user models.User, err error) {
 	var result = configs.AppObj.DB.Where("mobile = ?", params.Mobile).Select("id").First(&models.User{})
 	if result.RowsAffected != 0 {
 		err = errors.New("手机号已存在")
@@ -28,5 +30,12 @@ func (userservice Userservice) RegisterUser(params controllers.Register) (user m
 	user = models.User{Name: params.Name, Mobile: params.Mobile, Password: utils.BcryptMake([]byte(params.Password))}
 	err = configs.AppObj.DB.Create(&user).Error
 
+	return
+}
+func (userservice *userservice) Login(params controllers.Login) (err error, user *models.User) {
+	err = configs.AppObj.DB.Where("mobile=?",params.Mobile).First(&user).Error
+	if err != nil || !utils.BcryptMakeCheck([]byte(params.Password), user.Password) {
+		err = errors.New("用户名不存在或密码错误")
+	}
 	return
 }

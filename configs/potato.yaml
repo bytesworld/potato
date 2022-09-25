@@ -7,8 +7,8 @@ APP:
   APP_URL: 'http://localhost'
 
 JWT:
-  secret: weidong
-  jwt_ttl: 9999
+  secret: "weidong"
+  jwt_ttl: 17
 
 DATABASE:
   ENGINE: 'sqlite3'

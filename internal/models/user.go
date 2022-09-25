@@ -1,5 +1,7 @@
 package models
 
+import "strconv"
+
 type User struct {
 	ID
 	Name     string `json:"name" gorm:"not null;comment:用户名称"`
@@ -11,6 +13,10 @@ type User struct {
 
 func (User) TableName() string {
 	return "sys_user"
+}
+
+func (user User) GetUid() string  {
+	return strconv.Itoa(int(user.ID.ID))
 }
 
 type CreateUser struct {

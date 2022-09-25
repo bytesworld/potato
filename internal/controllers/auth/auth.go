@@ -5,17 +5,36 @@ import (
 	"gitee.com/bytesworld/tomato/internal/controllers"
 	. "gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/models"
+	"gitee.com/bytesworld/tomato/internal/service"
 	sv_auth "gitee.com/bytesworld/tomato/internal/service/auth"
 	"gitee.com/bytesworld/tomato/pkg/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func Auth(c *gin.Context) {
+func Login(c *gin.Context) {
 	Logger.Info("login")
-	c.JSON(http.StatusOK, gin.H{
-		"message": "auth",
-	})
+	var form controllers.Login
+	if err := c.ShouldBindJSON(&form); err != nil {
+
+		response.ValidateFail(c, controllers.GetErrorMsg(form, err))
+	}
+
+	if err, user := sv_auth.UserService.Login(form); err != nil {
+		response.BusinessFail(c, err.Error())
+	} else {
+		tokenData, err, _ := service.JwtService.CreateToken(service.AppGuardName, user)
+		if err != nil {
+			response.BusinessFail(c, err.Error())
+			return
+		} else {
+			response.Success(c, tokenData)
+
+		}
+	}
+	//c.JSON(http.StatusOK, gin.H{
+	//	"message": "auth",
+	//})
 }
 
 func Register(c *gin.Context) {
@@ -26,7 +45,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user, err := sv_auth.Userservice{}.RegisterUser(form)
+	user, err := sv_auth.UserService.RegisterUser(form)
 	if err != nil {
 		Logger.Error(err)
 		response.BusinessFail(c, err.Error())

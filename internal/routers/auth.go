@@ -6,7 +6,7 @@ import (
 )
 
 func loadAuthRouter(router *gin.RouterGroup) {
-	router.GET("auth/", auth.Auth)
+	router.POST("auth/", auth.Login)
 	router.GET("user/", auth.GetUsers)
 	router.POST("user/", auth.CreateUser)
 	router.GET("user/:id/", auth.GetUser)

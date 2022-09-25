@@ -45,3 +45,6 @@ func BusinessFail(c *gin.Context, msg string) {
 	Fail(c, controllers.Errors.BusinessError.ErrorCode, msg)
 }
 
+func TokenFail(c *gin.Context) {
+	FailByError(c, controllers.Errors.TokenError)
+}
