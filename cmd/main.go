@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"gitee.com/bytesworld/tomato/configs"
 	"gitee.com/bytesworld/tomato/internal"
 	"gitee.com/bytesworld/tomato/internal/logger"
 	"gitee.com/bytesworld/tomato/internal/middleware"
 	"gitee.com/bytesworld/tomato/internal/routers"
+	"gitee.com/bytesworld/tomato/version"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,6 +17,7 @@ import (
 )
 
 func main() {
+	fmt.Println(version.Version)
 	// 初始化数据库
 	configs.AppObj.DB = internal.DB
 	// 程序关闭前，释放数据库连接
